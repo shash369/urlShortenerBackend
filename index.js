@@ -2,7 +2,9 @@ import express from "express"
 import dotenv from "dotenv";
 import urlRoute from "./routes/url.route.js"
 import { connectDB } from "./db/index.db.js";
+import adminRoutes from "./routes/admin.route.js";
 import { URL } from "./models/url.model.js";
+import cors from "cors"
 dotenv.config({
     path:"./.env"
 })
@@ -13,7 +15,13 @@ connectDB().then(()=>{
     console.log("database is connected");
 })
 
+app.use(cors({
+    origin: "*",  
+    credentials: true
+}))
+
 app.use("/api/shorten",urlRoute);// will get sort code
+app.use("/api/admin", adminRoutes);
 
 app.get('/:shortcode',async(req,res)=>{   // will get the no of click
         const shortID=req.params.shortcode;
